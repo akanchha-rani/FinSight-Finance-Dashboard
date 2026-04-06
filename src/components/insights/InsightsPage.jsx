@@ -25,7 +25,6 @@ export default function InsightsPage({ txns, dark }) {
   return (
     <div style={{ animation: 'fadeIn .35s ease-out' }}>
 
-     
       <div className="ai-tab-nav">
         {TABS.map(t => (
           <button
@@ -38,28 +37,6 @@ export default function InsightsPage({ txns, dark }) {
         ))}
       </div>
 
-      
-      {serverHasKey === false && (
-        <div style={{
-          background: 'var(--amber-light)', border: '1px solid var(--amber)',
-          borderRadius: 12, padding: '12px 16px', marginBottom: 16,
-          display: 'flex', alignItems: 'flex-start', gap: 12,
-        }}>
-          
-          <div>
-            <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
-              API Key Not Found — AI Insights are disabled
-            </p>
-            <p style={{ fontSize: 12, color: 'var(--text2)', lineHeight: 1.7 }}>
-              1. Copy <code style={{ background: 'var(--border)', padding: '1px 5px', borderRadius: 4, fontSize: 11 }}>.env.example</code> → <code style={{ background: 'var(--border)', padding: '1px 5px', borderRadius: 4, fontSize: 11 }}>.env</code><br />
-              2. Set <code style={{ background: 'var(--border)', padding: '1px 5px', borderRadius: 4, fontSize: 11 }}>ANTHROPIC_API_KEY=sk-ant-...</code><br />
-              3. Restart <code style={{ background: 'var(--border)', padding: '1px 5px', borderRadius: 4, fontSize: 11 }}>node server.js</code>
-            </p>
-          </div>
-        </div>
-      )}
-
-      
       {activeTab === 'insights' && (
         <InsightsTab
           insights={insights}
