@@ -1,18 +1,10 @@
 import express from 'express'
 import cors from 'cors'
 import fetch from 'node-fetch'
-import { readFileSync, existsSync } from 'fs'
-
-try {
-  const env = readFileSync('.env', 'utf8')
-  env.split('\n').forEach(line => {
-    const [k, ...v] = line.split('=')
-    if (k && v.length) process.env[k.trim()] = v.join('=').trim()
-  })
-} catch {}
+import 'dotenv/config'
 
 const app = express()
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 
 app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' }))
 app.use(express.json())
@@ -32,7 +24,7 @@ app.post('/api/claude', async (req, res) => {
   if (!apiKey) {
     return res.status(500).json({
       error: 'NO_API_KEY',
-      message: 'ANTHROPIC_API_KEY is not set in your .env file. See .env.example for setup instructions.',
+      message: 'ANTHROPIC_API_KEY is not set in environment variables.',
     })
   }
 
@@ -67,13 +59,12 @@ app.post('/api/claude', async (req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log(`\n FinSight proxy server running on http://localhost:${PORT}`)
+  console.log(`\n FinSight proxy server running on port ${PORT}`)
   const key = process.env.ANTHROPIC_API_KEY
   if (key) {
     console.log(`API key loaded: ${key.slice(0, 14)}...`)
   } else {
-    console.log(`No ANTHROPIC_API_KEY found in .env — AI features won't work`)
-    console.log(`   Copy .env.example → .env and add your key`)
+    console.log(`No ANTHROPIC_API_KEY found — AI features won't work`)
   }
   console.log(`\n Start the frontend separately: npm run dev:client\n`)
 })
