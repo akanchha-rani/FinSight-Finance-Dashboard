@@ -8,7 +8,8 @@ A clean, modern personal finance tracker built with React and Node.js. FinSight 
 
 ## 📸 Preview
 
-![FinSight Dashboard Overview](./public/preview.png)
+<img width="1440" height="816" alt="Screenshot 2026-04-06 at 3 18 11 PM" src="https://github.com/user-attachments/assets/2d7249ae-46db-4cbe-85e1-d8be59ff5c08" />
+
 
 ---
 
