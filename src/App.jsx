@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom'
 import { useStore, useActions } from './store/useStore.js'
-import { genId, fmtIso } from './utils/helpers.js'
 import Sidebar from './components/layout/Sidebar.jsx'
 import Topbar from './components/layout/Topbar.jsx'
 import Modal from './components/ui/Modal.jsx'
@@ -8,6 +8,19 @@ import TransactionForm from './components/ui/TransactionForm.jsx'
 import OverviewPage from './components/dashboard/OverviewPage.jsx'
 import TransactionsPage from './components/transactions/TransactionsPage.jsx'
 import InsightsPage from './components/insights/InsightsPage.jsx'
+import { useState } from 'react'
+
+const PATH_TO_PAGE = {
+  '/': 'overview',
+  '/transactions': 'transactions',
+  '/insights': 'insights',
+}
+
+const PAGE_TO_PATH = {
+  overview: '/',
+  transactions: '/transactions',
+  insights: '/insights',
+}
 
 export default function App() {
   const txns = useStore(s => s.txns)
@@ -15,10 +28,19 @@ export default function App() {
   const dark = useStore(s => s.dark)
   const { addTxn, updateTxn, deleteTxn, setRole, setDark } = useActions()
 
-  const [page, setPage] = useState('overview')
+  const navigate = useNavigate()
+  const location = useLocation()
+
   const [addOpen, setAddOpen] = useState(false)
   const [editTxn, setEditTxn] = useState(null)
   const [deleteTxnState, setDeleteTxnState] = useState(null)
+
+  // Derive current page from URL
+  const page = PATH_TO_PAGE[location.pathname] || 'overview'
+
+  const setPage = (newPage) => {
+    navigate(PAGE_TO_PATH[newPage] || '/')
+  }
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark)
@@ -49,16 +71,20 @@ export default function App() {
         />
 
         <main className="content">
-          {page === 'overview' && <OverviewPage txns={txns} dark={dark} setPage={setPage} />}
-          {page === 'transactions' && (
-            <TransactionsPage
-              txns={txns}
-              role={role}
-              onEdit={setEditTxn}
-              onDelete={setDeleteTxnState}
-            />
-          )}
-          {page === 'insights' && <InsightsPage txns={txns} dark={dark} />}
+          <Routes>
+            <Route path="/" element={<OverviewPage txns={txns} dark={dark} setPage={setPage} />} />
+            <Route path="/transactions" element={
+              <TransactionsPage
+                txns={txns}
+                role={role}
+                onEdit={setEditTxn}
+                onDelete={setDeleteTxnState}
+              />
+            } />
+            <Route path="/insights" element={<InsightsPage txns={txns} dark={dark} />} />
+            {/* Fallback: redirect unknown paths to overview */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </main>
       </div>
 
