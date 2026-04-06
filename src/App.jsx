@@ -35,7 +35,6 @@ export default function App() {
   const [editTxn, setEditTxn] = useState(null)
   const [deleteTxnState, setDeleteTxnState] = useState(null)
 
-  // Derive current page from URL
   const page = PATH_TO_PAGE[location.pathname] || 'overview'
 
   const setPage = (newPage) => {
@@ -82,7 +81,7 @@ export default function App() {
               />
             } />
             <Route path="/insights" element={<InsightsPage txns={txns} dark={dark} />} />
-            {/* Fallback: redirect unknown paths to overview */}
+           
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
